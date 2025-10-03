@@ -6,7 +6,7 @@
 /*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:45:32 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 14:25:00 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/03 15:59:05 by rafamtz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ void							print_status(t_grim_reaper *reaper,
 									unsigned int philo_id, char msg);
 long							get_time_in_ms(void);
 long							get_rel_time_in_ms(long starttime);
+void							safe_lock(pthread_mutex_t *mutex,
+									t_grim_reaper *reaper);
 
 /* init */
 t_philo							*philos_init(t_params params, t_fork *forks);
@@ -82,7 +84,7 @@ void							store_data(t_params *params, char **argv);
 void							eat_and_sleep(t_grim_reaper *reaper,
 									t_philo *philo);
 void							philo_sleep(t_grim_reaper *reaper, long limit);
-void							t_philohink(t_grim_reaper *reaper,
+void							philo_think(t_grim_reaper *reaper,
 									t_philo *philo);
 
 /* exit */

@@ -6,7 +6,7 @@
 /*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:45:11 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 14:29:31 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/03 15:52:50 by rafamtz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	*reaper_routine(void *ptr)
 		i = 0;
 		while (i < reaper->params.number_of_philosophers)
 		{
-			pthread_mutex_lock(&reaper->philos[i].last_eaten_lock);
+			safe_lock(&reaper->philos[i].last_eaten_lock, reaper);
 			now = get_rel_time_in_ms(reaper->starttime);
 			time_passed = now - reaper->philos[i].last_eaten;
 			if (time_passed >= reaper->params.time_to_die)
@@ -65,7 +65,7 @@ void	*routine(void *ptr)
 	{
 		eat_and_sleep(philo->reaper, philo);
 		print_status(philo->reaper, philo->id, 't');
-		t_philohink(philo->reaper, philo);
+		philo_think(philo->reaper, philo);
 	}
 	return (NULL);
 }

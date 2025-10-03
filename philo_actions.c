@@ -6,7 +6,7 @@
 /*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:11 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 14:23:50 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/03 15:58:51 by rafamtz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 void	take_forks(t_grim_reaper *reaper, t_philo *philo)
 {
-	if (philo->id % 2 == 0)
+	if (philo->id % 2 == 0 && reaper->end_sim == false)
 	{
-		pthread_mutex_lock(&philo->r_fork->lock);
+		safe_lock(&philo->r_fork->lock, reaper);
 		print_status(reaper, philo->id, 'f');
 		if (reaper->params.number_of_philosophers > 1)
 		{
-			pthread_mutex_lock(&philo->l_fork->lock);
+			safe_lock(&philo->l_fork->lock, reaper);
 			print_status(reaper, philo->id, 'f');
 		}
 	}
-	else
+	else if (reaper->end_sim == false)
 	{
-		pthread_mutex_lock(&philo->l_fork->lock);
+		safe_lock(&philo->l_fork->lock, reaper);
 		print_status(reaper, philo->id, 'f');
-		pthread_mutex_lock(&philo->r_fork->lock);
+		safe_lock(&philo->r_fork->lock, reaper);
 		print_status(reaper, philo->id, 'f');
 	}
 }
@@ -47,7 +47,7 @@ void	drop_forks(t_philo *philo)
 	}
 }
 
-void	t_philohink(t_grim_reaper *reaper, t_philo *philo)
+void	philo_think(t_grim_reaper *reaper, t_philo *philo)
 {
 	long	wake_up;
 	long	limit;
@@ -93,7 +93,7 @@ void	eat_and_sleep(t_grim_reaper *reaper, t_philo *philo)
 			return ;
 	}
 	print_status(reaper, philo->id, 'e');
-	pthread_mutex_lock(&philo->last_eaten_lock);
+	safe_lock(&philo->last_eaten_lock, reaper);
 	philo->last_eaten = get_rel_time_in_ms(reaper->starttime);
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->last_eaten_lock);

@@ -6,11 +6,17 @@
 /*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:23 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 14:24:22 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/03 15:59:21 by rafamtz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	safe_lock(pthread_mutex_t *mutex, t_grim_reaper *reaper)
+{
+	if (reaper->end_sim == false)
+		pthread_mutex_lock(mutex);
+}
 
 int	ft_atoi(const char *nptr)
 {
@@ -62,7 +68,7 @@ void	print_status(t_grim_reaper *reaper, unsigned int philo_id, char msg)
 
 	if (reaper->end_sim == true)
 		return ;
-	pthread_mutex_lock(&reaper->printlock);
+	safe_lock(&reaper->printlock, reaper);
 	time = get_time_in_ms() - reaper->starttime;
 	if (msg == 'f')
 		printf("%ld %u has taken a fork\n", time, philo_id + 1);
