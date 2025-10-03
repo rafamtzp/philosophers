@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helpers.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/03 13:46:23 by rafamtz           #+#    #+#             */
+/*   Updated: 2025/10/03 14:24:22 by rafamtz          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	ft_atoi(const char *nptr)
@@ -29,20 +41,27 @@ int	ft_atoi(const char *nptr)
 	return (num);
 }
 
-long get_time_in_ms(void)
+long	get_time_in_ms(void)
 {
-    struct timeval now;
-    long time;
+	struct timeval	now;
+	long			time;
 
-    gettimeofday(&now, NULL);
-    time = (now.tv_sec * 1000 + now.tv_usec / 1000);
-    return (time);
+	gettimeofday(&now, NULL);
+	time = (now.tv_sec * 1000 + now.tv_usec / 1000);
+	return (time);
 }
 
-void print_status(grim_reaper_t *reaper, unsigned int philo_id, char msg)
+long	get_rel_time_in_ms(long starttime)
 {
-	long time;
+	return (get_time_in_ms() - starttime);
+}
 
+void	print_status(t_grim_reaper *reaper, unsigned int philo_id, char msg)
+{
+	long	time;
+
+	if (reaper->end_sim == true)
+		return ;
 	pthread_mutex_lock(&reaper->printlock);
 	time = get_time_in_ms() - reaper->starttime;
 	if (msg == 'f')
@@ -57,7 +76,7 @@ void print_status(grim_reaper_t *reaper, unsigned int philo_id, char msg)
 	{
 		printf("%ld %u died\n", time, philo_id + 1);
 		reaper->end_sim = true;
+		return ;
 	}
 	pthread_mutex_unlock(&reaper->printlock);
 }
-

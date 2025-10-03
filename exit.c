@@ -1,19 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/03 13:46:05 by rafamtz           #+#    #+#             */
+/*   Updated: 2025/10/03 14:13:12 by rafamtz          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-// destroy mutexes
-
-
-// free philos and forks (also destroys mutexes)
-void free_all()
+void	destroy_mutexes(t_grim_reaper *reaper)
 {
-    // free philosophers
+	int	i;
 
-    // destroy mutexes (forks)
-
-    // free forks
+	i = 0;
+	while (i < reaper->params.number_of_philosophers)
+	{
+		pthread_mutex_destroy(&reaper->philos[i].last_eaten_lock);
+		pthread_mutex_destroy(&reaper->forks[i++].lock);
+	}
+	pthread_mutex_destroy(&reaper->printlock);
 }
 
-int handle_err(int err, grim_reaper_t *reaper)
+void	free_all(t_grim_reaper *reaper)
+{
+	free(reaper->philos);
+	free(reaper->forks);
+}
+
+int	handle_err(int err, t_grim_reaper *reaper)
 {
 	if (err == 0)
 	{
@@ -21,17 +39,12 @@ int handle_err(int err, grim_reaper_t *reaper)
 		printf("TIME_TO_DIE EATING_TIME SLEEPING_TIME\n");
 		printf("(all in miliseconds)\n");
 	}
-    else if (err == 1)
-        printf("Error: Unable to allocate memory\n");
-    else if (err == 2)
-    {
-        printf("Error: Unable to create threads\n");
-        free_all(reaper->philos, reaper->forks);
-    }
-    return (-1);
+	else if (err == 1)
+		printf("Error: Unable to allocate memory\n");
+	else if (err == 2)
+	{
+		printf("Error: Unable to create threads\n");
+		free_all(reaper);
+	}
+	return (-1);
 }
-
-
-
-
-

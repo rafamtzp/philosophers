@@ -1,68 +1,93 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/03 13:45:32 by rafamtz           #+#    #+#             */
+/*   Updated: 2025/10/03 14:25:00 by rafamtz          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
-#define PHILO_H
-#include <sys/time.h>
-#include <pthread.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <unistd.h>
+# define PHILO_H
+# include <pthread.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <unistd.h>
 
-typedef pthread_mutex_t mutex_t;
-typedef struct timeval timeval_t;
-
-typedef struct
+typedef struct s_params
 {
-	int time_to_eat;
-	int time_to_die;
-	int time_to_sleep;
-	int number_of_philosophers;
-}	params_t;
+	int							time_to_eat;
+	int							time_to_die;
+	int							time_to_sleep;
+	int							number_of_philosophers;
+}								t_params;
 
-typedef struct
+typedef struct s_fork
 {
-    pthread_mutex_t lock;
-    int id;
-} fork_t;
+	pthread_mutex_t				lock;
+	int							id;
+}								t_fork;
 
-typedef struct grim_reaper_s grim_reaper_t;
+typedef struct s_grim_reaper	t_grim_reaper;
 
-typedef struct
+typedef struct s_philo
 {
-	struct timeval starttime;
-	fork_t *l_fork;
-	fork_t *r_fork;
-	struct grim_reaper_s *reaper;
-    int id;
-	pthread_t thread_id;
-	pthread_mutex_t last_eaten_lock;
-	long last_eaten;
-	int time_to_die;
-	int meals_eaten;
-}	philo_t;
+	struct timeval				starttime;
+	t_fork						*l_fork;
+	t_fork						*r_fork;
+	struct s_grim_reaper		*reaper;
+	int							id;
+	pthread_t					thread_id;
+	pthread_mutex_t				last_eaten_lock;
+	long						last_eaten;
+	int							time_to_die;
+	int							meals_eaten;
+}								t_philo;
 
-typedef struct grim_reaper_s
+typedef struct s_grim_reaper
 {
-	long starttime;
-	params_t params;
-	philo_t *philos;
-    fork_t *forks;
-	pthread_mutex_t printlock;
-    pthread_t thread_id;
-	bool end_sim;
-}	grim_reaper_t;
+	long						starttime;
+	t_params					params;
+	t_philo						*philos;
+	t_fork						*forks;
+	pthread_mutex_t				printlock;
+	pthread_t					thread_id;
+	bool						end_sim;
+}								t_grim_reaper;
 
-typedef struct
+typedef struct s_thread_arg
 {
-	grim_reaper_t *reaper;
-	philo_t *philo;
-} thread_arg_t;
+	t_grim_reaper				*reaper;
+	t_philo						*philo;
+}								t_thread_arg;
 
 /* helpers */
-int	ft_atoi(const char *nptr);
+int								ft_atoi(const char *nptr);
+void							print_status(t_grim_reaper *reaper,
+									unsigned int philo_id, char msg);
+long							get_time_in_ms(void);
+long							get_rel_time_in_ms(long starttime);
 
-/*init*/
-philo_t *philos_init(params_t params, fork_t *forks);
-fork_t *forks_init(params_t params);
-void store_data(params_t *params, char **argv);
+/* init */
+t_philo							*philos_init(t_params params, t_fork *forks);
+t_fork							*forks_init(t_params params);
+void							store_data(t_params *params, char **argv);
+
+/* philo actions */
+void							eat_and_sleep(t_grim_reaper *reaper,
+									t_philo *philo);
+void							philo_sleep(t_grim_reaper *reaper, long limit);
+void							t_philohink(t_grim_reaper *reaper,
+									t_philo *philo);
+
+/* exit */
+int								handle_err(int err, t_grim_reaper *reaper);
+void							free_all(t_grim_reaper *reaper);
+void							destroy_mutexes(t_grim_reaper *reaper);
 
 #endif
