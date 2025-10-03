@@ -6,7 +6,7 @@
 /*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:45:32 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 15:59:05 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/03 16:49:10 by rafamtz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,16 @@ typedef struct s_thread_arg
 }								t_thread_arg;
 
 /* helpers */
-int								ft_atoi(const char *nptr);
 void							print_status(t_grim_reaper *reaper,
 									unsigned int philo_id, char msg);
 long							get_time_in_ms(void);
 long							get_rel_time_in_ms(long starttime);
 void							safe_lock(pthread_mutex_t *mutex,
 									t_grim_reaper *reaper);
+
+/* parsing */
+int								ft_atoi(const char *nptr);
+bool							is_valid_input(int argc, char **argv);
 
 /* init */
 t_philo							*philos_init(t_params params, t_fork *forks);

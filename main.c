@@ -6,7 +6,7 @@
 /*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:45:11 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 15:52:50 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/03 16:49:44 by rafamtz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,7 @@ int	main(int argc, char **argv)
 	t_grim_reaper	reaper;
 	int				i;
 
-	if (argc != 5 || ft_atoi(argv[1]) < 1 || ft_atoi(argv[2]) < 1
-		|| ft_atoi(argv[3]) < 1 || ft_atoi(argv[4]) < 1)
+	if (is_valid_input(argc, argv) == false)
 		return (handle_err(0, &reaper));
 	store_data(&reaper.params, argv);
 	reaper.forks = forks_init(reaper.params);

@@ -6,7 +6,7 @@
 /*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:23 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 15:59:21 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/03 16:50:47 by rafamtz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,35 +16,6 @@ void	safe_lock(pthread_mutex_t *mutex, t_grim_reaper *reaper)
 {
 	if (reaper->end_sim == false)
 		pthread_mutex_lock(mutex);
-}
-
-int	ft_atoi(const char *nptr)
-{
-	int	isminus;
-	int	num;
-
-	while (*nptr == ' ' || *nptr == '\r' || *nptr == '\t' || *nptr == '\f'
-		|| *nptr == '\v' || *nptr == '\n')
-		nptr++;
-	isminus = 0;
-	if (*nptr == '-')
-	{
-		isminus = 1;
-		nptr++;
-	}
-	else if (*nptr == '+')
-		nptr++;
-	num = 0;
-	while (*nptr >= '0' && *nptr <= '9')
-	{
-		num += (*nptr - '0');
-		nptr++;
-		if (*nptr >= '0' && *nptr <= '9')
-			num = num * 10;
-	}
-	if (isminus == 1)
-		return (-num);
-	return (num);
 }
 
 long	get_time_in_ms(void)
