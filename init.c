@@ -6,7 +6,7 @@
 /*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:38 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/07 15:27:08 by ramarti2         ###   ########.fr       */
+/*   Updated: 2025/10/07 20:26:03 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,7 @@ t_philo	*philos_init(t_params params, t_fork *forks)
 	while (i < params.number_of_philosophers)
 	{
 		philos[i].id = i;
-		philos[i].meals_eaten = 0;
 		philos[i].time_to_die = params.time_to_die;
-		philos[i].meals_eaten = 0;
 		philos[i].last_eaten = 0;
 		pthread_mutex_init(&philos[i].last_eaten_lock, NULL);
 		if (i == 0)

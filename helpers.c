@@ -6,7 +6,7 @@
 /*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:23 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/07 19:23:01 by ramarti2         ###   ########.fr       */
+/*   Updated: 2025/10/07 20:27:26 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	safe_lock(pthread_mutex_t *mutex, t_grim_reaper *reaper)
 
 bool	sim_stopped(t_grim_reaper *reaper)
 {
-	bool result;
+	bool	result;
 
 	result = false;
 	pthread_mutex_lock(&reaper->end_lock);
