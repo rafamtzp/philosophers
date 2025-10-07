@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:38 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 14:12:24 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/07 15:27:08 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ t_fork	*forks_init(t_params params)
 	i = 0;
 	while (i < params.number_of_philosophers)
 	{
-		pthread_mutex_init(&forks[i].lock, NULL);
+		if (pthread_mutex_init(&forks[i].lock, NULL) != 0)
+			return (NULL);
 		forks[i].id = i;
 		i++;
 	}

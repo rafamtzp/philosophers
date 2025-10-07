@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:45:11 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 16:49:44 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/07 19:14:39 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	*reaper_routine(void *ptr)
 			time_passed = now - reaper->philos[i].last_eaten;
 			if (time_passed >= reaper->params.time_to_die)
 				print_status(reaper, reaper->philos[i].id, 'd');
-			if (reaper->end_sim == true)
+			if (sim_stopped(reaper) == true)
 				return (NULL);
 			pthread_mutex_unlock(&reaper->philos[i].last_eaten_lock);
 			i++;
@@ -61,10 +61,9 @@ void	*routine(void *ptr)
 	delay_start(philo->reaper->starttime);
 	if (philo->id % 2 == 0)
 		philo_sleep(philo->reaper, 1);
-	while (philo->reaper->end_sim == false)
+	while (sim_stopped(philo->reaper) == false)
 	{
 		eat_and_sleep(philo->reaper, philo);
-		print_status(philo->reaper, philo->id, 't');
 		philo_think(philo->reaper, philo);
 	}
 	return (NULL);
@@ -75,7 +74,10 @@ int	start_threads(t_grim_reaper *reaper)
 	int				i;
 	struct timeval	time;
 
-	pthread_mutex_init(&reaper->printlock, NULL);
+	if (pthread_mutex_init(&reaper->printlock, NULL) != 0)
+		return (-1);
+	if (pthread_mutex_init(&reaper->end_lock, NULL) != 0)
+		return (-1);
 	reaper->end_sim = false;
 	gettimeofday(&time, NULL);
 	reaper->starttime = time.tv_sec * 1000 + time.tv_usec / 1000
@@ -119,5 +121,4 @@ int	main(int argc, char **argv)
 	}
 	destroy_mutexes(&reaper);
 	free_all(&reaper);
-	return (0);
 }

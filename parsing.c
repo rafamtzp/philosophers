@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 16:33:09 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 16:50:30 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/07 13:34:35 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ bool	is_valid_input(int argc, char **argv)
 {
 	int	i;
 
-	if (argc != 5)
+	if (argc != 5 || ft_atoi(argv[1]) > 200)
 		return (false);
-	i = 1;
+	i = 2;
 	while (i < argc)
 	{
-		if (ft_atoi(argv[i]) < 1 || ft_atoi(argv[i]) > 200)
+		if (ft_atoi(argv[i]) < 60)
 			return (false);
 		i++;
 	}
