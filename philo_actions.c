@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_actions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:11 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 15:58:51 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/07 19:10:25 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 void	take_forks(t_grim_reaper *reaper, t_philo *philo)
 {
-	if (philo->id % 2 == 0 && reaper->end_sim == false)
+	if (sim_stopped(reaper) == true)
+		return ;
+	if (philo->id % 2 == 0)
 	{
 		safe_lock(&philo->r_fork->lock, reaper);
 		print_status(reaper, philo->id, 'f');
@@ -24,7 +26,7 @@ void	take_forks(t_grim_reaper *reaper, t_philo *philo)
 			print_status(reaper, philo->id, 'f');
 		}
 	}
-	else if (reaper->end_sim == false)
+	else
 	{
 		safe_lock(&philo->l_fork->lock, reaper);
 		print_status(reaper, philo->id, 'f');
@@ -53,20 +55,23 @@ void	philo_think(t_grim_reaper *reaper, t_philo *philo)
 	long	limit;
 	long	now;
 
+	print_status(philo->reaper, philo->id, 't');
 	limit = reaper->params.time_to_die - (get_rel_time_in_ms(reaper->starttime)
 			- philo->last_eaten) - (reaper->params.time_to_eat / 2);
-	if (reaper->params.number_of_philosophers >= 100)
-		limit = limit + (reaper->params.number_of_philosophers / 100);
+	// if (reaper->params.number_of_philosophers >= 100)
+	// 	limit = limit + (reaper->params.number_of_philosophers / 100);
 	if (limit < 0)
 		limit = 0;
 	else if (limit > 600)
 		limit = 200;
 	now = get_rel_time_in_ms(reaper->starttime);
 	wake_up = get_rel_time_in_ms(reaper->starttime) + limit;
-	while (now < wake_up && reaper->end_sim == false)
+	while (now < wake_up)
 	{
 		now = get_rel_time_in_ms(reaper->starttime);
 		usleep(100);
+		if (sim_stopped(reaper) == true)
+			return ;
 	}
 }
 
@@ -77,11 +82,16 @@ void	philo_sleep(t_grim_reaper *reaper, long limit)
 
 	now = get_rel_time_in_ms(reaper->starttime);
 	wake_up = get_rel_time_in_ms(reaper->starttime) + limit;
-	while (now < wake_up && reaper->end_sim == false)
+	// printf("wake up: %li\n", wake_up);
+	// printf("a\n");
+	while (now < wake_up)
 	{
 		now = get_rel_time_in_ms(reaper->starttime);
 		usleep(100);
+		if (sim_stopped(reaper) == true)
+			return ;
 	}
+	//printf("b\n");
 }
 
 void	eat_and_sleep(t_grim_reaper *reaper, t_philo *philo)
@@ -89,7 +99,7 @@ void	eat_and_sleep(t_grim_reaper *reaper, t_philo *philo)
 	take_forks(reaper, philo);
 	while (reaper->params.number_of_philosophers == 1)
 	{
-		if (reaper->end_sim == true)
+		if (sim_stopped(reaper) == true)
 			return ;
 	}
 	print_status(reaper, philo->id, 'e');

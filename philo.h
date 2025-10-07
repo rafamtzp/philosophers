@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:45:32 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 16:49:10 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/07 18:14:41 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_grim_reaper
 	t_philo						*philos;
 	t_fork						*forks;
 	pthread_mutex_t				printlock;
+	pthread_mutex_t				end_lock;
 	pthread_t					thread_id;
 	bool						end_sim;
 }								t_grim_reaper;
@@ -73,6 +74,7 @@ long							get_time_in_ms(void);
 long							get_rel_time_in_ms(long starttime);
 void							safe_lock(pthread_mutex_t *mutex,
 									t_grim_reaper *reaper);
+bool	sim_stopped(t_grim_reaper *reaper);
 
 /* parsing */
 int								ft_atoi(const char *nptr);

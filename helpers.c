@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helpers.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafamtz <rafamtz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:23 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/03 16:50:47 by rafamtz          ###   ########.fr       */
+/*   Updated: 2025/10/07 19:23:01 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,27 @@
 
 void	safe_lock(pthread_mutex_t *mutex, t_grim_reaper *reaper)
 {
-	if (reaper->end_sim == false)
-		pthread_mutex_lock(mutex);
+	if (sim_stopped(reaper) == false)
+	{
+		if (pthread_mutex_lock(mutex) != 0)
+		{
+			pthread_mutex_lock(&reaper->end_lock);
+			reaper->end_sim = true;
+			pthread_mutex_unlock(&reaper->end_lock);
+		}
+	}
+}
+
+bool	sim_stopped(t_grim_reaper *reaper)
+{
+	bool result;
+
+	result = false;
+	pthread_mutex_lock(&reaper->end_lock);
+	if (reaper->end_sim == true)
+		result = true;
+	pthread_mutex_unlock(&reaper->end_lock);
+	return (result);
 }
 
 long	get_time_in_ms(void)
@@ -37,9 +56,11 @@ void	print_status(t_grim_reaper *reaper, unsigned int philo_id, char msg)
 {
 	long	time;
 
-	if (reaper->end_sim == true)
+	if (sim_stopped(reaper) == true)
 		return ;
 	safe_lock(&reaper->printlock, reaper);
+	if (sim_stopped(reaper) == true)
+		return ;
 	time = get_time_in_ms() - reaper->starttime;
 	if (msg == 'f')
 		printf("%ld %u has taken a fork\n", time, philo_id + 1);
@@ -52,8 +73,9 @@ void	print_status(t_grim_reaper *reaper, unsigned int philo_id, char msg)
 	else if (msg == 'd')
 	{
 		printf("%ld %u died\n", time, philo_id + 1);
+		pthread_mutex_lock(&reaper->end_lock);
 		reaper->end_sim = true;
-		return ;
+		pthread_mutex_unlock(&reaper->end_lock);
 	}
 	pthread_mutex_unlock(&reaper->printlock);
 }
