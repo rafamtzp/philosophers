@@ -6,7 +6,7 @@
 /*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:11 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/07 20:25:48 by ramarti2         ###   ########.fr       */
+/*   Updated: 2025/10/08 16:56:58 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void	take_forks(t_grim_reaper *reaper, t_philo *philo)
 {
-	if (sim_stopped(reaper) == true)
-		return ;
 	if (philo->id % 2 == 0)
 	{
 		safe_lock(&philo->r_fork->lock, reaper);
@@ -92,16 +90,25 @@ void	philo_sleep(t_grim_reaper *reaper, long limit)
 void	eat_and_sleep(t_grim_reaper *reaper, t_philo *philo)
 {
 	take_forks(reaper, philo);
-	while (reaper->params.number_of_philosophers == 1)
+	if (sim_stopped(reaper) == false)
 	{
-		if (sim_stopped(reaper) == true)
-			return ;
+		while (reaper->params.number_of_philosophers == 1)
+		{
+			if (sim_stopped(reaper) == true)
+				return ;
+		}
+		print_status(reaper, philo->id, 'e');
+		safe_lock(&philo->last_eaten_lock, reaper);
+		philo->last_eaten = get_rel_time_in_ms(reaper->starttime);
+		pthread_mutex_unlock(&philo->last_eaten_lock);
+		philo_sleep(reaper, reaper->params.time_to_eat);
+		if (sim_stopped(reaper) == false)
+		{
+			safe_lock(&philo->last_eaten_lock, reaper);
+			philo->meals_eaten++;
+			pthread_mutex_unlock(&philo->last_eaten_lock);
+		}
 	}
-	print_status(reaper, philo->id, 'e');
-	safe_lock(&philo->last_eaten_lock, reaper);
-	philo->last_eaten = get_rel_time_in_ms(reaper->starttime);
-	pthread_mutex_unlock(&philo->last_eaten_lock);
-	philo_sleep(reaper, reaper->params.time_to_eat);
 	drop_forks(philo);
 	print_status(reaper, philo->id, 's');
 	philo_sleep(reaper, reaper->params.time_to_sleep);

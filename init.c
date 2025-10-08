@@ -6,18 +6,22 @@
 /*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:38 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/07 20:26:03 by ramarti2         ###   ########.fr       */
+/*   Updated: 2025/10/08 15:44:34 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	store_data(t_params *params, char **argv)
+void	store_data(t_params *params, int argc, char **argv)
 {
 	params->number_of_philosophers = ft_atoi(argv[1]);
 	params->time_to_die = ft_atoi(argv[2]);
 	params->time_to_eat = ft_atoi(argv[3]);
 	params->time_to_sleep = ft_atoi(argv[4]);
+	if (argc == 6)
+		params->meal_limit = ft_atoi(argv[5]);
+	else
+		params->meal_limit = -1;
 }
 
 t_fork	*forks_init(t_params params)
@@ -55,6 +59,7 @@ t_philo	*philos_init(t_params params, t_fork *forks)
 		philos[i].id = i;
 		philos[i].time_to_die = params.time_to_die;
 		philos[i].last_eaten = 0;
+		philos[i].meals_eaten = 0;
 		pthread_mutex_init(&philos[i].last_eaten_lock, NULL);
 		if (i == 0)
 			philos[i].l_fork = &forks[n - 1];

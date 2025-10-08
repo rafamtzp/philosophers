@@ -3,7 +3,8 @@ NAME = philo
 CFLAGS = -Wall -Wextra -Werror -g
 CC = cc
 
-SRC = helpers.c philo_actions.c init.c main.c exit.c parsing.c
+SRC = helpers.c philo_actions.c init.c main.c exit.c parsing.c grim_reaper.c \
+	  routine.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)

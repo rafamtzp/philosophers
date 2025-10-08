@@ -6,7 +6,7 @@
 /*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:45:32 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/07 20:27:41 by ramarti2         ###   ########.fr       */
+/*   Updated: 2025/10/08 16:56:32 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_params
 	int							time_to_die;
 	int							time_to_sleep;
 	int							number_of_philosophers;
+	int							meal_limit;
 }								t_params;
 
 typedef struct s_fork
@@ -45,6 +46,7 @@ typedef struct s_philo
 	pthread_t					thread_id;
 	pthread_mutex_t				last_eaten_lock;
 	long						last_eaten;
+	int							meals_eaten;
 	int							time_to_die;
 }								t_philo;
 
@@ -66,6 +68,13 @@ typedef struct s_thread_arg
 	t_philo						*philo;
 }								t_thread_arg;
 
+/* routine */
+int								start_threads(t_grim_reaper *reaper);
+void							delay_start(long starttime);
+
+/* grim reaper */
+void							*reaper_routine(void *ptr);
+
 /* helpers */
 void							print_status(t_grim_reaper *reaper,
 									unsigned int philo_id, char msg);
@@ -82,7 +91,8 @@ bool							is_valid_input(int argc, char **argv);
 /* init */
 t_philo							*philos_init(t_params params, t_fork *forks);
 t_fork							*forks_init(t_params params);
-void							store_data(t_params *params, char **argv);
+void							store_data(t_params *params, int argc,
+									char **argv);
 
 /* philo actions */
 void							eat_and_sleep(t_grim_reaper *reaper,

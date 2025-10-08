@@ -6,7 +6,7 @@
 /*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 13:46:05 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/07 19:48:22 by ramarti2         ###   ########.fr       */
+/*   Updated: 2025/10/08 17:01:00 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	destroy_mutexes(t_grim_reaper *reaper)
 		pthread_mutex_destroy(&reaper->forks[i++].lock);
 	}
 	pthread_mutex_destroy(&reaper->printlock);
+	pthread_mutex_destroy(&reaper->end_lock);
 }
 
 void	free_all(t_grim_reaper *reaper)
@@ -36,9 +37,11 @@ int	handle_err(int err, t_grim_reaper *reaper)
 	if (err == 0)
 	{
 		printf("Error.\nUsage:\n./philo no_philos(>=1) ");
-		printf("time_to_die time_to_eat time_to_sleep");
-		printf(" (all in miliseconds)\n");
+		printf("'time_to_die' 'time_to_eat' 'time_to_sleep' ");
+		printf("'no_of_meals_every_philo_must_eat (optional)'\n");
+		printf(" (times in miliseconds)\n");
 		printf("*No more than 200 philos nor times under 60ms\n");
+		printf("*Number of philos and meal limit must be >= 1\n");
 	}
 	else if (err == 1)
 		printf("Error: Unable to allocate memory\n");
