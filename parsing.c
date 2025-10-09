@@ -6,7 +6,7 @@
 /*   By: ramarti2 <ramarti2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 16:33:09 by rafamtz           #+#    #+#             */
-/*   Updated: 2025/10/08 15:38:50 by ramarti2         ###   ########.fr       */
+/*   Updated: 2025/10/09 16:03:10 by ramarti2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bool	is_valid_input(int argc, char **argv)
 {
 	int	i;
 
-	if (argc < 5 || argc > 6 || ft_atoi(argv[1]) > 200 || ft_atoi(argv[1] < 1)
+	if (argc < 5 || argc > 6 || ft_atoi(argv[1]) > 200 || ft_atoi(argv[1]) < 1)
 		return (false);
 	i = 2;
 	while (i < 5)
