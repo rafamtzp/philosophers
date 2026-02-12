@@ -1,4 +1,4 @@
-* This project was created by ramarti2 and is part of the 42 School curriculum. *
+*This project was created by ramarti2 and is part of the 42 School curriculum.*
 # 🍝 Philosophers
 
 > A multithreading and synchronization project based on the Dining Philosophers problem.
@@ -141,9 +141,9 @@ To execute, run the program (philo) with the following arguments:
 ```bash
 ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_must_eat]
 ```
-# (!) All times must be more than 60ms!
-# (!!) The number of philosphers can't be less than 1 or more than 200!
-# (!!!) If given, the number of meals can't be less than or equal to 0!
+#### (!) All times must be more than 60ms!
+#### (!!) The number of philosphers can't be less than 1 or more than 200!
+#### (!!!) If given, the number of meals can't be less than or equal to 0!
 
 ## 🧪 Testing Examples
 
